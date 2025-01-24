@@ -6,6 +6,8 @@
     <title>OCaml toplevel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <!-- <link rel="stylesheet" href="codemirror5/lib/codemirror.css"> -->
     <style>
 
       code, kbd, pre, samp {
@@ -74,6 +76,8 @@
       }
       #toplevel-side{
       position:relative;
+      display: flex;
+      flex-direction: column;
       height: 100%;
       width: 50%;
       overflow: auto;
@@ -157,7 +161,23 @@
           height: 50%;
         }
       }
+
+      #joy-reference-table pre {
+        margin: 5px 0 5px 0;
+        padding: 0;
+      }
+      #joy-reference-table > tbody > tr > td:first-child {
+        height: 100%;
+        vertical-align: middle;
+        margin: 5px 0 5px 0;
+        width: 45%;
+        max-width: min(250px, 50%);
+      }
+      #joy-reference-table > tbody > tr > td > code {
+        display: inline;
+      }
     </style>
+    <script defer data-domain="kaustubh.page" src="https://plausible.kaustubh.page/js/script.js"></script>
     <script type="text/javascript">
 
       window.onhashchange = function() { window.location.reload() }
@@ -198,15 +218,12 @@
     </div>
     <div id="toplevel-side">
       <h3>Joy</h3>
-      <div style="background-color: white; border: 1px solid gray; float: left; display: inline-block; width: auto;" id="joy-canvas"></div>
+      <div>
+        <div style="background-color: white; border: 1px solid gray; float: left; display: inline-block; width: auto;" id="joy-canvas"></div>
+      </div>
 
-      <div style="display: none">
-        <h4>A compiler from OCaml bytecode to Javascript.</h4>
-        <p>It makes OCaml programs that run on Web browsers. It is
-          easy to install as it works with an existing installation of OCaml,
-          with no need to recompile any library. It comes with bindings for a
-          large part of the browser APIs.</p>
-        <p>This web-based OCaml toplevel is compiled using Js_of_ocaml.</p>
+      <div style="margin-top: 20px;">
+
         <h4>Command</h4>
         <table class="table table-striped table-condensed">
           <tbody class>
@@ -237,6 +254,155 @@
 
           </tbody>
         </table>
+      </div>
+
+      <div style="margin-top: 20px">
+        <h4>Joy Reference</h4>
+        <table class="table table-striped table-condensed" id="joy-reference-table">
+          <tbody class>
+            <tr>
+              <td>
+                Circle <i>(with radius 50)</i>
+              </td>
+              <td><pre><code class="language-ocaml">let c = circle 50</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Rectangle <i>(with length 100, width 50)</i>
+              </td>
+              <td><pre><code class="language-ocaml">let r = rectangle 100 50</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Show shapes <code>c</code> and <code>r</code> on canvas
+              </td>
+              <td><pre><code class="language-ocaml">show [ c; r ]</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Clear canvas
+              </td>
+              <td><pre><code class="language-ocaml">clear ()</code></pre></td>
+            </tr>
+            <tr>
+              <th>
+                <h5>Transformations</h5>
+              </th>
+              <th></th>
+            </tr>
+            </tr>
+            <tr>
+              <td>
+                Move <code>c</code> to the right by 50, and up by 100
+              </td>
+              <td><pre><code class="language-ocaml">let c2 = c |> translate 50 100</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Move <code>c</code> to the right by 50, and down by 100
+                <br />
+                <small>note that we put -100 in its own parentheses.
+                  we need to do this for negative numbers</small>
+              </td>
+              <td><pre><code class="language-ocaml">let c2 = c |> translate 50 (-100)</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Make <code>c</code> 2 times bigger
+                <br />
+                <small>note the decimal <code>2.0</code>, it's a float!</small>
+              </td>
+              <td><pre><code class="language-ocaml">let c2 = c |> scale 2.0</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Make <code>c</code> half as small
+              </td>
+              <td><pre><code class="language-ocaml">let c2 = c |> scale 0.5</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Rotate a rectangle <code>r</code> by 18 degrees
+              </td>
+              <td><pre><code class="language-ocaml">let r2 = r |> rotate 18</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Rotate a rectangle <code>r</code> by 18 degrees, 10 times
+              </td>
+              <td><pre><code class="language-ocaml"
+>let rot18 = rotate 18;;
+let pattern = r |> repeat 10 rot18;;
+show [ pattern ];;</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Rotate a rectangle <code>r</code> by 18 degrees and scale it by 0.8 in one transformation
+              </td>
+              <td><pre><code class="language-ocaml">let tr = compose (rotate 18) (scale 0.8)</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Rotate a rectangle <code>r</code> by 18 degrees and scale it by 0.8, 10 times
+              </td>
+              <td><pre><code class="language-ocaml"
+>let tr = compose (rotate 18) (scale 0.8);;
+let pattern = r |> repeat 10 tr;;
+show [ pattern ];;</code></pre></td>
+            </tr>
+            <tr>
+              <th><h5>More shapes!</h5></th>
+              <th></th>
+            </tr>
+            <tr>
+              <td>
+                Ellipse </i>(with x-radius 100, y-radius 50)</i>
+              </td>
+              <td><pre><code class="language-ocaml">let e = ellipse 100 50</code></pre></td>
+            </tr>
+            <tr>
+              <td>
+                Line </i>(from origin to (-50, 50))</i>
+              </td>
+              <td><pre><code class="language-ocaml">let l = line (point (-50) 50)</code></pre></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <div style="display: none">
+        <h4>A compiler from OCaml bytecode to Javascript.</h4>
+        <p>It makes OCaml programs that run on Web browsers. It is
+          easy to install as it works with an existing installation of OCaml,
+          with no need to recompile any library. It comes with bindings for a
+          large part of the browser APIs.</p>
+        <p>This web-based OCaml toplevel is compiled using Js_of_ocaml.</p>
+        <h4>Command</h4>
+        <table class="table table-striped table-condensed">
+          <tbody class>
+            <tr>
+              <td>Enter/Return</td>
+              <td>Submit code</td>
+            </tr>
+            <tr>
+              <td>Ctrl + Enter</td>
+              <td>Newline</td>
+            </tr>
+            <tr>
+              <td>Up / Down</td>
+              <td>Browse history</td>
+            </tr>
+            <tr>
+              <td>Ctrl + k</td>
+              <td>Reset toplevel</td>
+            </tr>
+            <tr>
+              <td>Tab</td>
+              <td>Indent code</td>
+            </tr>
+
+          </tbody>
+        </table>
         <h4>Try to execute samples</h4>
         <div id="toplevel-examples" class="list-group"></div>
         <canvas width=200 height=200 id="test-canvas"></canvas>
@@ -245,5 +411,17 @@
         </pre>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/ocaml.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    <!-- <script src="codemirror5/lib/codemirror.js"></script>
+    <script src="codemirror5/mode/mllike/mllike.js"></script>
+    <script>
+      var codeArea = document.getElementById("userinput");
+      var editor = CodeMirror.fromTextArea(codeArea, {
+        lineNumbers: true
+      });
+    </script> -->
   </body>
 </html>
